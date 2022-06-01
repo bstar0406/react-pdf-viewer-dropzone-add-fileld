@@ -8,13 +8,10 @@ import Tick from './assets/iamges/tick.png';
 import True from './assets/iamges/true.png';
 import False from './assets/iamges/false.png';
 import { useDropzone } from 'react-dropzone';
-// import { Viewer, Worker } from '@react-pdf-viewer/core';
-// import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
 import Select from 'react-select'
 // Import styles
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
-// import PDF from './assets/pdf/123.pdf';
 import AddFields from './assets/json/addfields.json';
 import GetFields from './assets/json/getfields.json';
 
@@ -40,12 +37,13 @@ const focusedStyle = {
 };
 
 const acceptStyle = {
-  borderColor: '#6ACDB4'
+  borderColor: '#00e676'
 };
 
 const rejectStyle = {
-  borderColor: '#6ACDB4'
+  borderColor: '#ff1744'
 };
+
 
 const customStyles = {
   control: base => ({
@@ -67,8 +65,8 @@ function App() {
     setDetails(GetFields.GetFields);
     let temp = [];
     GetFields.GetFields.map(item => {
-      temp.push(item.Field.FieldName, "")
-      return  item;
+      temp.push({ name: item.Field.FieldName, value: "" })
+      return item;
     })
     setInputs(temp);
   }, [])
@@ -81,18 +79,25 @@ function App() {
       return field;
     }
     )
-    console.log(tempOptions)
     setOptions(tempOptions)
   }, [fields])
 
-  // const defaultLayoutPluginInstance = defaultLayoutPlugin();
   const {
     getRootProps,
     getInputProps,
+    open,
+    acceptedFiles,
     isFocused,
     isDragAccept,
     isDragReject
-  } = useDropzone({ accept: { 'pdf': ['.pdf'] } });
+  } = useDropzone({
+    accept: {
+      'text/html': ['.pdf'],
+    }, 
+    noClick: true,
+    noKeyboard: true,
+    maxSize: 2*1024*1024,
+  });
 
   const style = useMemo(() => ({
     ...baseStyle,
@@ -119,7 +124,7 @@ function App() {
   const fetch = () => {
     let temp = [];
     GetFields.GetFields.map(item => {
-      temp.push(item.Field.FieldName, "")
+      temp.push({ name: item.Field.FieldName, value: item.Field.Value })
       return item;
     })
     setInputs(temp)
@@ -140,7 +145,6 @@ function App() {
   const changeOption = (e) => {
     let temp = fields;
     temp = fields.map((item) => {
-      console.log(item.Field.FieldName, e.value)
 
       if (item.Field.FieldName === e.value) {
         if (item.Field.Required === 'true') item.Field.Required = 'false';
@@ -150,6 +154,13 @@ function App() {
     })
     setFields(temp)
   }
+
+  const acceptedFileItems = acceptedFiles.map(file => (
+    <li key={file.path}>
+      {file.path} - {Math.round(file.size/1024)} KBytes
+    </li>
+  ));
+
   return (
     <div className="App">
       <div className="d-flex justify-content-between align-content-center">
@@ -173,13 +184,16 @@ function App() {
                 <div className='align-self-start'>
                   <img src={Upload} alt='upload' className='me-2 upload-img' />
                 </div>
-                <span className='align-self-end'>Drag file to upload, or </span>
-                <span className='browse align-self-end me-2'>Browse</span>
+                <span className='align-self-end'>Drag file to upload, or &nbsp; </span>
+                <span className='browse align-self-end me-2' onClick={open}>Browse</span>
                 <span className='tiny-text align-self-end'>Supports .pdf (less than 2MB)</span>
+              </div>
+              <div>
+                {acceptedFileItems}
               </div>
             </div>
           </div>
-          <button className='btn fetch-btn align-self-center' onClick={() => fetch()}>Fetch</button>
+          <button className='btn btn-primary fetch-btn align-self-center' onClick={() => fetch()}>Fetch</button>
         </div>
         <div className='fetch-field d-flex justify-content-between '>
           <div className='field-text'>
@@ -200,16 +214,16 @@ function App() {
           </div>
         </div>
         <div className='d-flex setting'>
-          <div className='fields'>
-            <div className='field-list align-self-start'>
-              {fields.map((field, index) => (
+          <div className='fields d-flex flex-column'>
+            <div className='field-list align-self-start w-100'>
+              {inputs && fields.map((field, index) => (
                 field.Field.Required === "true" && (
                   <div className='row d-flex mb-2' key={index}>
                     <div className='col-4 align-self-center'>
                       <span className=''>{field.Field.DisplayName}</span>
                     </div>
                     <div className='col-6 align-self-center'>
-                      <input className='form-control' placeholder={field.Field.FieldName} id={field.Field.FieldName} onChange={handleInputChange} />
+                      <input className='form-control' value={inputs[index].value} placeholder={field.Field.FieldName} id={field.Field.FieldName} onChange={handleInputChange} />
                     </div>
                     <div className='col-2 align-self-center'>
                       {getValue(field.Field.FieldName).Field.Confident === "true" && <img src={True} alt='trueState' />}
@@ -219,7 +233,7 @@ function App() {
                 ))
               )}
             </div>
-            <div className='submit-section align-self-end'>
+            <div className='submit-section align-self-end w-100'>
               <div className='small-text'>
                 Wasn’t that easy? With Fetchie, we make information capture this simple.
               </div>
@@ -250,9 +264,8 @@ function App() {
                 height: '750px',
               }}
             >
-              {/* <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.14.305/build/pdf.worker.min.js">
-                <Viewer fileUrl={PDF} plugins={[defaultLayoutPluginInstance]} />
-              </Worker> */}
+              {console.log(acceptedFiles)}
+
             </div>
           </div>
         </div>

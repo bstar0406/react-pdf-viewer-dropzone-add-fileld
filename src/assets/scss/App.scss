@@ -211,6 +211,7 @@ button {
 
 .browse {
   color: rgb(66, 84, 240);
+  cursor: pointer;
 }
 
 .upload-img {
@@ -258,7 +259,7 @@ button {
 }
 
 .field-list{
-  height: 500px !important;
+  height: 550px !important;
   overflow-y: scroll;
   overflow-x: hidden;
 }
