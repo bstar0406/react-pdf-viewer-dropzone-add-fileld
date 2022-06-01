@@ -245,14 +245,16 @@ button {
 
 .select-field{
   width: 186px;
-  height:32px;
-
-  border: 1px solid #B6C2E2;
+  height:20px;
   border-radius: 6px;
   margin-top: 1rem;
   input{
     height: 20px!important;
   }
+}
+
+.css-1s2u09g-control{
+  height: 32px!important;
 }
 
 .field-list{

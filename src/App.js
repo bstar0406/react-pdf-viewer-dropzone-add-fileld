@@ -8,13 +8,13 @@ import Tick from './assets/iamges/tick.png';
 import True from './assets/iamges/true.png';
 import False from './assets/iamges/false.png';
 import { useDropzone } from 'react-dropzone';
-import { Viewer, Worker } from '@react-pdf-viewer/core';
-import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
+// import { Viewer, Worker } from '@react-pdf-viewer/core';
+// import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
 import Select from 'react-select'
 // Import styles
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
-import PDF from './assets/pdf/123.pdf';
+// import PDF from './assets/pdf/123.pdf';
 import AddFields from './assets/json/addfields.json';
 import GetFields from './assets/json/getfields.json';
 
@@ -47,6 +47,15 @@ const rejectStyle = {
   borderColor: '#6ACDB4'
 };
 
+const customStyles = {
+  control: base => ({
+    ...base,
+    height: 32,
+    minHeight: 32,
+    padding: 0
+  })
+};
+
 function App() {
   const [fields, setFields] = React.useState([]);
   const [details, setDetails] = React.useState([]);
@@ -59,6 +68,7 @@ function App() {
     let temp = [];
     GetFields.GetFields.map(item => {
       temp.push(item.Field.FieldName, "")
+      return  item;
     })
     setInputs(temp);
   }, [])
@@ -75,7 +85,7 @@ function App() {
     setOptions(tempOptions)
   }, [fields])
 
-  const defaultLayoutPluginInstance = defaultLayoutPlugin();
+  // const defaultLayoutPluginInstance = defaultLayoutPlugin();
   const {
     getRootProps,
     getInputProps,
@@ -133,7 +143,7 @@ function App() {
       console.log(item.Field.FieldName, e.value)
 
       if (item.Field.FieldName === e.value) {
-        if(item.Field.Required === 'true') item.Field.Required ='false';
+        if (item.Field.Required === 'true') item.Field.Required = 'false';
         else item.Field.Required = 'true'
       }
       return item;
@@ -184,7 +194,9 @@ function App() {
             )}
           </div>
           <div className='justify-content-center pe-3'>
-            <Select options={options} className='select-field' onChange={(e) => changeOption(e)} isSearchable={false} placeholder="Add Field" controlShouldRenderValue={false}/>
+            <Select options={options} className='select-field' onChange={(e) => changeOption(e)} isSearchable={false} placeholder="Add Field" controlShouldRenderValue={false} styles={customStyles} components={{
+              IndicatorSeparator: () => null
+            }} />
           </div>
         </div>
         <div className='d-flex setting'>
