@@ -9,12 +9,17 @@ import True from './assets/iamges/true.png';
 import False from './assets/iamges/false.png';
 import { useDropzone } from 'react-dropzone';
 import Select from 'react-select'
-// Import styles
-import '@react-pdf-viewer/core/lib/styles/index.css';
-import '@react-pdf-viewer/default-layout/lib/styles/index.css';
+import { Document, Page } from 'react-pdf/dist/esm/entry.webpack';
+
 import AddFields from './assets/json/addfields.json';
 import GetFields from './assets/json/getfields.json';
 
+import { Viewer, SpecialZoomLevel, Worker } from '@react-pdf-viewer/core';
+// import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
+import { zoomPlugin, RenderZoomInProps, RenderZoomOutProps, RenderCurrentScaleProps } from '@react-pdf-viewer/zoom';
+
+import '@react-pdf-viewer/core/lib/styles/index.css';
+import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 const baseStyle = {
   flex: 1,
   display: 'flex',
@@ -60,6 +65,25 @@ function App() {
   const [inputs, setInputs] = React.useState([]);
   const [options, setOptions] = React.useState([]);
 
+  // const defaultLayoutPluginInstance = defaultLayoutPlugin();
+
+  const zoomPluginInstance = zoomPlugin();
+    const { CurrentScale, ZoomIn, ZoomOut } = zoomPluginInstance;
+  const [numPages, setNumPages] = React.useState(null);
+  const [pageNumber, setPageNumber] = React.useState(1);
+
+  const onDocumentLoadSuccess = ({ numPages }) => {
+    setNumPages(numPages);
+  };
+
+  const goToPrevPage = () =>
+    setPageNumber(pageNumber - 1 <= 1 ? 1 : pageNumber - 1);
+
+  const goToNextPage = () =>
+    setPageNumber(
+      pageNumber + 1 >= numPages ? numPages : pageNumber + 1,
+    );
+
   React.useEffect(() => {
     setFields(AddFields.AddFields);
     setDetails(GetFields.GetFields);
@@ -70,6 +94,8 @@ function App() {
     })
     setInputs(temp);
   }, [])
+
+
 
 
   React.useEffect(() => {
@@ -93,10 +119,10 @@ function App() {
   } = useDropzone({
     accept: {
       'text/html': ['.pdf'],
-    }, 
+    },
     noClick: true,
     noKeyboard: true,
-    maxSize: 2*1024*1024,
+    maxSize: 2 * 1024 * 1024,
   });
 
   const style = useMemo(() => ({
@@ -157,7 +183,7 @@ function App() {
 
   const acceptedFileItems = acceptedFiles.map(file => (
     <li key={file.path}>
-      {file.path} - {Math.round(file.size/1024)} KBytes
+      {file.path} - {Math.round(file.size / 1024)} KBytes
     </li>
   ));
 
@@ -258,15 +284,94 @@ function App() {
             </div>
           </div>
           <div className='flex-grow-1 pdf-viewer'>
-            <div
-              style={{
-                border: '1px solid rgba(0, 0, 0, 0.3)',
-                height: '750px',
-              }}
-            >
-              {console.log(acceptedFiles)}
-
+            <div className='pagination-back d-flex'>
+              <div className='align-self-center'>
+              <span className='me-2 pointer' onClick={goToPrevPage}>{'<'}</span>
+              <span className='me-2'>
+                {pageNumber} of {numPages}
+              </span>
+              <span  className='pointer' onClick={goToNextPage}>{'>'}</span>
+              </div>
             </div>
+
+            <Document
+              file="./assets/pdf/aaa.pdf"
+              onLoadSuccess={onDocumentLoadSuccess}
+              className='document'
+            >
+              <Page scale={1.5} pageNumber={pageNumber} className='w-100' />
+            </Document>
+            {/* <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.14.305/build/pdf.worker.js">
+              <div
+                style={{
+                  height: '750px',
+                  width: '100%',
+                  marginLeft: 'auto',
+                  marginRight: 'auto',
+                  overflow:'hidden'
+                }}
+              >
+                <Viewer
+                  fileUrl={'./assets/pdf/aaa.pdf'}
+                  plugins={[zoomPlugin]}
+                  defaultScale={SpecialZoomLevel.PageFit}
+                />
+              </div>
+            </Worker>
+            <div
+                style={{
+                    alignItems: 'center',
+                    backgroundColor: '#eeeeee',
+                    borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    padding: '4px',
+                }}
+            >
+                <div style={{ padding: '0px 2px' }}>
+                    <ZoomOut>
+                        {(RenderZoomOutProps) => (
+                            <button
+                                style={{
+                                    backgroundColor: '#357edd',
+                                    border: 'none',
+                                    borderRadius: '4px',
+                                    color: '#ffffff',
+                                    cursor: 'pointer',
+                                    padding: '8px',
+                                }}
+                                onClick={RenderZoomOutProps.onClick}
+                            >
+                                Zoom out
+                            </button>
+                        )}
+                    </ZoomOut>
+                </div>
+                <div style={{ padding: '0px 2px' }}>
+                    <CurrentScale>
+                        {(RenderCurrentScaleProps) => <>{`${Math.round(RenderCurrentScaleProps.scale * 100)}%`}</>}
+                    </CurrentScale>
+                </div>
+                <div style={{ padding: '0px 2px' }}>
+                    <ZoomIn>
+                        {(RenderZoomInProps) => (
+                            <button
+                                style={{
+                                    backgroundColor: '#357edd',
+                                    border: 'none',
+                                    borderRadius: '4px',
+                                    color: '#ffffff',
+                                    cursor: 'pointer',
+                                    padding: '8px',
+                                }}
+                                onClick={RenderZoomInProps.onClick}
+                            >
+                                Zoom in
+                            </button>
+                        )}
+                    </ZoomIn>
+                </div>
+            </div> */}
           </div>
         </div>
       </div>

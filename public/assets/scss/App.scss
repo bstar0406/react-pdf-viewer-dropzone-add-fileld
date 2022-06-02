@@ -93,25 +93,8 @@
 
 .pdf-viewer {
   background: #F0F0F0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin: 0 auto;
-  position: relative;
-  z-index: 1000;
-  height: 721px;
-  // overflow: auto;
-  padding: 30px;
 }
 
-.pdf-region{
-  height: 200px;
-}
-
-.pointer{
-  cursor: pointer;
-}
 .fields {
   width: 509px;
   margin-right: 22px;
@@ -279,29 +262,4 @@ button {
   height: 550px !important;
   overflow-y: scroll;
   overflow-x: hidden;
-}
-
-.pagination-back{
-  position: absolute;
-  top:18px;
-  right:13px;
-  color: #7D7D85;
-
-
-  /* white */
-
-  background: #FFFFFF;
-  box-shadow: -2px 16px 26px -12px rgba(138, 130, 130, 0.93);
-  border-radius: 5px;
-}
-
-canvas{
-  height: 680px !important;
-  width: 500px!important;
-}
-
-.document{
-  overflow-y: auto;
-  height: 680px !important;
-  width: 500px!important;
 }
