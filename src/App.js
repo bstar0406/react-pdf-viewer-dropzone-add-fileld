@@ -14,9 +14,9 @@ import { Document, Page } from 'react-pdf/dist/esm/entry.webpack';
 import AddFields from './assets/json/addfields.json';
 import GetFields from './assets/json/getfields.json';
 
-import { Viewer, SpecialZoomLevel, Worker } from '@react-pdf-viewer/core';
+// import { Viewer, SpecialZoomLevel, Worker } from '@react-pdf-viewer/core';
 // import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
-import { zoomPlugin, RenderZoomInProps, RenderZoomOutProps, RenderCurrentScaleProps } from '@react-pdf-viewer/zoom';
+// import { zoomPlugin, RenderZoomInProps, RenderZoomOutProps, RenderCurrentScaleProps } from '@react-pdf-viewer/zoom';
 
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
@@ -67,8 +67,8 @@ function App() {
 
   // const defaultLayoutPluginInstance = defaultLayoutPlugin();
 
-  const zoomPluginInstance = zoomPlugin();
-    const { CurrentScale, ZoomIn, ZoomOut } = zoomPluginInstance;
+  // const zoomPluginInstance = zoomPlugin();
+    // const { CurrentScale, ZoomIn, ZoomOut } = zoomPluginInstance;
   const [numPages, setNumPages] = React.useState(null);
   const [pageNumber, setPageNumber] = React.useState(1);
 
@@ -284,7 +284,7 @@ function App() {
             </div>
           </div>
           <div className='flex-grow-1 pdf-viewer'>
-            <div className='pagination-back d-flex'>
+            <div className='pagination-back d-flex  justify-content-center'>
               <div className='align-self-center'>
               <span className='me-2 pointer' onClick={goToPrevPage}>{'<'}</span>
               <span className='me-2'>

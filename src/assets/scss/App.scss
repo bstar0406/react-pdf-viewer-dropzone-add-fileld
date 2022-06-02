@@ -286,6 +286,8 @@ button {
   top:18px;
   right:13px;
   color: #7D7D85;
+  width: 91px;
+  height:27px;
 
 
   /* white */
@@ -301,7 +303,7 @@ canvas{
 }
 
 .document{
-  overflow-y: auto;
+  overflow: hidden;
   height: 680px !important;
   width: 500px!important;
 }
